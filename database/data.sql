@@ -1,6 +1,6 @@
 -- ==============================================================
 -- Datos de prueba para el sistema Turno Clínica
--- Lenguajes de Programación II - UCC
+-- Lenguajes de Programación II - Universidad Católica de Cuyo (UCCuyo)
 -- ==============================================================
 
 USE turnoclinica;

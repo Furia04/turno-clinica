@@ -2,7 +2,7 @@
 
 # 🏥 Turno Clínica - API Backend REST
 ### *Sistema Integral de Gestión y Reserva de Turnos Médicos*
-**Universidad Católica de Córdoba (UCC) — Facultad de Ingeniería**  
+**Universidad Católica de Cuyo (UCCuyo) — Facultad de Ciencias Económicas y Empresariales / Ingeniería**  
 **Cátedra: Lenguajes de Programación II | Primer Entregable del Trabajo Final**
 
 [![Java](https://img.shields.io/badge/Java-21%20LTS-orange.svg?logo=openjdk&logoColor=white)](https://www.oracle.com/java/)
@@ -18,9 +18,9 @@
 ### 👨‍💻 Integrantes del Proyecto
 | Apellido y Nombre | Rol / Carrera | Institución |
 |---|---|---|
-| **Ortiz Ignacio** | Estudiante LPII | Universidad Católica de Córdoba |
-| **Poblete Luis** | Estudiante LPII | Universidad Católica de Córdoba |
-| **Manrique Leandro** | Estudiante LPII | Universidad Católica de Córdoba |
+| **Ortiz Ignacio** | Estudiante LPII | Universidad Católica de Cuyo |
+| **Poblete Luis** | Estudiante LPII | Universidad Católica de Cuyo |
+| **Manrique Leandro** | Estudiante LPII | Universidad Católica de Cuyo |
 
 ---
 
@@ -335,5 +335,5 @@ En la próxima entrega se integrará:
 ---
 
 <div align="center">
-Desarrollado para la cátedra <b>Lenguajes de Programación II</b> — UCC 2026.
+Desarrollado para la cátedra <b>Lenguajes de Programación II</b> — Universidad Católica de Cuyo (UCCuyo) 2026.
 </div>

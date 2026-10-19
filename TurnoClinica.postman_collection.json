@@ -1,8 +1,8 @@
 {
 	"info": {
 		"_postman_id": "8a72b036-7c91-4e89-b825-9a84d412e11a",
-		"name": "Turno Clínica API - Lenguajes de Programación II UCC",
-		"description": "Colección completa de pruebas para el primer entregable del trabajo final 'Turno Clínica' (UCC). Incluye CRUDs, relaciones, validaciones y manejo de errores.",
+		"name": "Turno Clínica API - Lenguajes de Programación II UCCuyo",
+		"description": "Colección completa de pruebas para el primer entregable del trabajo final 'Turno Clínica' (Universidad Católica de Cuyo). Incluye CRUDs, relaciones, validaciones y manejo de errores.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"variable": [

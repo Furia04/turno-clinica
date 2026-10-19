@@ -1,6 +1,6 @@
 -- ==============================================================
 -- Script de Creación de Base de Datos y Tablas - Turno Clínica
--- Lenguajes de Programación II - UCC
+-- Lenguajes de Programación II - Universidad Católica de Cuyo (UCCuyo)
 -- ==============================================================
 
 CREATE DATABASE IF NOT EXISTS turnoclinica

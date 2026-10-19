@@ -12,7 +12,7 @@
 	<artifactId>turno-clinica</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>turno-clinica</name>
-	<description>Sistema de Reserva de Turnos Médicos - Lenguajes de Programación II (UCC)</description>
+	<description>Sistema de Reserva de Turnos Médicos - Lenguajes de Programación II (Universidad Católica de Cuyo - UCCuyo)</description>
 
 	<properties>
 		<java.version>21</java.version>
