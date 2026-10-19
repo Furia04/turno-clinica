@@ -1,191 +1,223 @@
-# Turno Clínica - Sistema de Reserva de Turnos Médicos
-**Lenguajes de Programación II - Universidad Católica de Córdoba (UCC)**  
-**Primer Entregable del Trabajo Final - Octubre 2026**
+<div align="center">
+
+# 🏥 Turno Clínica - API Backend REST
+### *Sistema Integral de Gestión y Reserva de Turnos Médicos*
+**Universidad Católica de Córdoba (UCC) — Facultad de Ingeniería**  
+**Cátedra: Lenguajes de Programación II | Primer Entregable del Trabajo Final**
+
+[![Java](https://img.shields.io/badge/Java-21%20LTS-orange.svg?logo=openjdk&logoColor=white)](https://www.oracle.com/java/)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.1.1-brightgreen.svg?logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
+[![Spring Data JPA](https://img.shields.io/badge/Spring%20Data-JPA-blue.svg?logo=hibernate&logoColor=white)](https://spring.io/projects/spring-data-jpa)
+[![MySQL](https://img.shields.io/badge/Database-MySQL%208.0+-4479A1.svg?logo=mysql&logoColor=white)](https://www.mysql.com/)
+[![Build Status](https://img.shields.io/badge/Build-Passing-success.svg?logo=apachemaven&logoColor=white)](https://maven.apache.org/)
+[![API](https://img.shields.io/badge/API-REST%20CRUD-blueviolet.svg)](#-funcionalidades-y-endpoints-disponibles)
+[![Postman](https://img.shields.io/badge/Postman-Collection%20Ready-FF6C37.svg?logo=postman&logoColor=white)](#-colección-de-postman-y-pruebas-reproducibles)
 
 ---
 
-## 👥 Integrantes del Grupo
-* **Poblete Luis**
-* **Manrique Leandro**
-* **Ortiz Ignacio**
+### 👨‍💻 Integrantes del Proyecto
+| Apellido y Nombre | Rol / Carrera | Institución |
+|---|---|---|
+| **Ortiz Ignacio** | Estudiante LPII | Universidad Católica de Córdoba |
+| **Poblete Luis** | Estudiante LPII | Universidad Católica de Córdoba |
+| **Manrique Leandro** | Estudiante LPII | Universidad Católica de Córdoba |
 
 ---
 
-## 📖 1. Título y Problema que Resuelve
+</div>
 
-### Título del Proyecto
-**Turno Clínica** — Plataforma Backend de Gestión y Reserva de Turnos Médicos.
-
-### Problema
-En centros médicos y consultorios ambulatorios, el registro manual de turnos por teléfono o en papel genera superposiciones horarias, pérdidas de turnos, cancelaciones desorganizadas y falta de trazabilidad histórica sobre las atenciones médicas.
-
-**Turno Clínica** provee una API REST centralizada y persistente que garantiza la asignación coordinada de turnos, valida la disponibilidad horaria sin solapamientos, controla la integridad referencial de los pacientes y los profesionales, y ofrece consultas optimizadas por relación.
+## 📌 Tabla de Contenidos
+1. [Descripción y Problema que Resuelve](#-1-descripción-del-proyecto-y-problema)
+2. [Perfiles de Usuario](#-2-perfiles-de-usuario)
+3. [Modelo de Datos y Relaciones](#-3-modelo-de-datos-y-relaciones)
+4. [Arquitectura y Organización](#-4-arquitectura-y-organización-del-código)
+5. [Funcionalidades y Endpoints](#-5-funcionalidades-y-endpoints-disponibles)
+6. [Validaciones y Manejo de Errores](#-6-validaciones-y-manejo-de-errores)
+7. [Instrucciones de Instalación y Ejecución](#-7-instrucciones-de-instalación-y-ejecución)
+8. [Colección de Postman y Casos de Prueba](#-8-colección-de-postman-y-pruebas-reproducibles)
+9. [Próximos Pasos (Segundo Entregable)](#-9-próximos-pasos-segundo-entregable)
 
 ---
 
-## 🎯 2. Usuarios Destinados
-1. **Pacientes:** Consultan disponibilidad, solicitan y reservan turnos con un profesional médico en un horario específico.
-2. **Personal de Recepción / Administrativos:** Gestionan la agenda integral de la clínica, registran profesionales y pacientes, reprograman o cancelan turnos.
-3. **Profesionales Médicos:** Consultan su agenda diaria de turnos asignados por paciente y horario.
+## 🎯 1. Descripción del Proyecto y Problema
+
+### El Desafío
+En la administración tradicional de centros médicos y policlínicos ambulatorios, el registro manual de turnos por libreta o por vía telefónica ocasiona:
+* ⚠️ **Superposición horaria** de pacientes citados con el mismo profesional.
+* ⚠️ **Pérdida de turnos** y ausentismo no coordinado.
+* ⚠️ **Falta de trazabilidad** respecto a qué paciente fue atendido por qué profesional médico.
+* ⚠️ **Inconsistencia referencial** en cancelaciones o modificaciones de datos.
+
+### La Solución: Turno Clínica
+**Turno Clínica** proporciona una solución robusta a nivel de backend: una API RESTful desarrollada con **Java 21**, **Spring Boot** y persistencia relacional en **MySQL** mediante **Spring Data JPA**. Garantiza integridad referencial, reglas de validación en tiempo real para disponibilidad horaria, y desacoplamiento limpio mediante DTOs y Mappers.
+
+---
+
+## 👥 2. Perfiles de Usuario
+
+* 🧑‍⚕️ **Profesionales Médicos:** Consultan su agenda diaria de atención y turnos asignados por paciente y horario.
+* 🩺 **Pacientes:** Solicitan, consultan, reprograman o cancelan sus reservas de turnos según especialidad y profesional.
+* 🖥️ **Personal de Recepción / Gestión:** Administran altas de profesionales y pacientes, supervisan la disponibilidad de la clínica y resuelven turnos en mesa de entrada.
 
 ---
 
 ## 🏛️ 3. Modelo de Datos y Relaciones
 
-El sistema implementa 3 entidades principales persistidas en MySQL mediante Spring Data JPA:
+El backend implementa tres entidades principales con claves primarias autoincrementales (`GenerationType.IDENTITY`) persistidas en MySQL:
 
-### Entidades y Atributos
+### Entidades
 
-1. **`Paciente` (`pacientes`)**
-   * `id`: `Long` (Clave primaria autoincremental, `@GeneratedValue(strategy = GenerationType.IDENTITY)`)
-   * `nombre`: `String` (Obligatorio, máx 100 caracteres)
-   * `apellido`: `String` (Obligatorio, máx 100 caracteres)
-   * `dni`: `String` (Obligatorio, único, numérico de 7 a 10 dígitos)
-   * `telefono`: `String` (Formato válido)
-   * `email`: `String` (Obligatorio, validado con formato `@Email`)
-   * `obraSocial`: `String` (Opcional, nombre de la prepaga / obra social)
+* **`Paciente` (`pacientes`):** Datos filiatorios y de contacto (`id`, `nombre`, `apellido`, `dni` [UNIQUE], `telefono`, `email`, `obra_social`).
+* **`Profesional` (`profesionales`):** Datos del cuerpo médico (`id`, `nombre`, `apellido`, `matricula` [UNIQUE], `especialidad`).
+* **`Turno` (`turnos`):** Agenda de atención (`id`, `fecha_hora`, `motivo`, `estado` [Enum: `PENDIENTE`, `CONFIRMADO`, `CANCELADO`, `ATENDIDO`]).
 
-2. **`Profesional` (`profesionales`)**
-   * `id`: `Long` (Clave primaria autoincremental, `@GeneratedValue(strategy = GenerationType.IDENTITY)`)
-   * `nombre`: `String` (Obligatorio, máx 100 caracteres)
-   * `apellido`: `String` (Obligatorio, máx 100 caracteres)
-   * `matricula`: `String` (Obligatorio, único, matrícula profesional)
-   * `especialidad`: `String` (Obligatorio, ej: Cardiología, Traumatología, etc.)
-
-3. **`Turno` (`turnos`)**
-   * `id`: `Long` (Clave primaria autoincremental, `@GeneratedValue(strategy = GenerationType.IDENTITY)`)
-   * `fechaHora`: `LocalDateTime` (Obligatorio, fecha y hora futura del turno)
-   * `motivo`: `String` (Opcional, descripción del motivo de consulta)
-   * `estado`: `EstadoTurno` (Enum: `PENDIENTE`, `CONFIRMADO`, `CANCELADO`, `ATENDIDO`)
-   * `paciente`: `@ManyToOne(fetch = FetchType.LAZY, optional = false)` con `@JoinColumn(name = "id_paciente")`
-   * `profesional`: `@ManyToOne(fetch = FetchType.LAZY, optional = false)` con `@JoinColumn(name = "id_profesional")`
-
-### Esquema y Cardinalidad de Relaciones
+### Diagrama de Relaciones y Cardinalidad
 
 ```
-+---------------+              +---------------+              +-------------------+
-|   PACIENTE    | 1          N |     TURNO     | N          1 |    PROFESIONAL    |
-|---------------|--------------|---------------|--------------|-------------------|
-| id (PK)       |              | id (PK)       |              | id (PK)           |
-| dni (UNIQUE)  |              | fecha_hora    |              | matricula (UNIQUE)|
-| nombre        |              | motivo        |              | nombre            |
-| apellido      |              | estado        |              | apellido          |
-| email         |              | id_pacienteFK |              | especialidad      |
-| ...           |              | id_profesioFK |              |                   |
-+---------------+              +---------------+              +-------------------+
+  ┌───────────────────────────────────┐               ┌──────────────────────────────────────┐
+  │             PACIENTE              │               │             PROFESIONAL              │
+  ├───────────────────────────────────┤               ├──────────────────────────────────────┤
+  │ PK  id: BIGINT                    │               │ PK  id: BIGINT                       │
+  │     nombre: VARCHAR(100)          │               │     nombre: VARCHAR(100)             │
+  │     apellido: VARCHAR(100)        │               │     apellido: VARCHAR(100)           │
+  │ UQ  dni: VARCHAR(15)              │               │ UQ  matricula: VARCHAR(30)           │
+  │     telefono: VARCHAR(30)         │               │     especialidad: VARCHAR(100)       │
+  │     email: VARCHAR(120)           │               │                                      │
+  │     obra_social: VARCHAR(100)     │               │                                      │
+  └─────────────────┬─────────────────┘               └──────────────────┬───────────────────┘
+                    │ 1                                                  │ 1
+                    │                                                    │
+                    │ N                                                  │ N
+                  ┌─┴────────────────────────────────────────────────────┴─┐
+                  │                         TURNO                          │
+                  ├────────────────────────────────────────────────────────┤
+                  │ PK  id: BIGINT                                         │
+                  │     fecha_hora: DATETIME                               │
+                  │     motivo: VARCHAR(255)                               │
+                  │     estado: VARCHAR(20) [PENDIENTE, CONFIRMADO...]     │
+                  │ FK  id_paciente: BIGINT (NOT NULL)                     │
+                  │ FK  id_profesional: BIGINT (NOT NULL)                  │
+                  └────────────────────────────────────────────────────────┘
 ```
 
-* **Paciente (1) a (N) Turnos:** Un paciente puede registrar múltiples turnos. Un turno pertenece exclusivamente a un paciente.
-* **Profesional (1) a (N) Turnos:** Un médico atiende múltiples turnos en su agenda. Un turno está asignado a un único profesional.
-* **Paciente (N) a (N) Profesional:** Relación muchos a muchos resuelta a través de la entidad intermedia `Turno`.
+* **Relación Paciente 1 a N Turno:** Un paciente puede registrar varios turnos. Un turno pertenece exclusivamente a un paciente. Mapeado con `@ManyToOne(fetch = FetchType.LAZY, optional = false)` y `@JoinColumn(name = "id_paciente")`.
+* **Relación Profesional 1 a N Turno:** Un profesional gestiona múltiples turnos. Un turno se atiende con un único profesional. Mapeado con `@ManyToOne(fetch = FetchType.LAZY, optional = false)` y `@JoinColumn(name = "id_profesional")`.
+* **Relación Paciente N a N Profesional:** Resuelta a través de la entidad intermedia `Turno`.
 
 ---
 
-## 🧱 4. Organización del Proyecto y Arquitectura
+## 🧱 4. Arquitectura y Organización del Código
 
-El proyecto sigue una arquitectura desacoplada por capas:
+El proyecto cumple de forma estricta el estándar de capas recomendado por la cátedra:
+
 ```
 src/main/java/com/ucc/turnoclinica/
-├── TurnoClinicaApplication.java   # Clase principal Spring Boot
-├── controller/                    # Capa REST (@RestController, endpoints HTTP, ResponseEntity)
-│   ├── PacienteController.java
-│   ├── ProfesionalController.java
-│   └── TurnoController.java
-├── service/                       # Lógica de negocio y transacciones (@Service, @Transactional)
-│   ├── PacienteService.java
-│   ├── ProfesionalService.java
-│   └── TurnoService.java
-├── repository/                    # Acceso a base de datos (@Repository, Spring Data JPA)
+│
+├── TurnoClinicaApplication.java        # Punto de entrada (@SpringBootApplication)
+│
+├── controller/                         # Capa Web / API REST (@RestController)
+│   ├── PacienteController.java         # Endpoints CRUD de Pacientes
+│   ├── ProfesionalController.java      # Endpoints CRUD de Profesionales
+│   └── TurnoController.java            # Endpoints de Turnos y consultas relacionales
+│
+├── service/                            # Capa de Lógica de Negocio (@Service, @Transactional)
+│   ├── PacienteService.java            # Lógica, unicidad de DNI y reglas de borrado
+│   ├── ProfesionalService.java         # Lógica, matrícula única y reglas de borrado
+│   └── TurnoService.java               # Control de solapamiento, disponibilidad y validación
+│
+├── repository/                         # Capa de Acceso a Datos (Spring Data JPA)
 │   ├── PacienteRepository.java
 │   ├── ProfesionalRepository.java
-│   └── TurnoRepository.java
-├── entity/                        # Entidades JPA (@Entity, @Table, @Id, @ManyToOne)
+│   └── TurnoRepository.java            # Consultas findByPaciente_Id, findByProfesional_Id
+│
+├── entity/                             # Capa de Dominio / Entidades JPA
 │   ├── Paciente.java
 │   ├── Profesional.java
 │   ├── Turno.java
 │   └── EstadoTurno.java
-├── dto/                           # Data Transfer Objects (Java Records para entrada y salida)
-│   ├── PacienteRequestDTO.java
-│   ├── PacienteResponseDTO.java
+│
+├── dto/                                # Data Transfer Objects (Java 21 Records)
+│   ├── PacienteRequestDTO.java         # Validación de entrada (@Valid)
+│   ├── PacienteResponseDTO.java        # Retorno con ID generado
 │   ├── ProfesionalRequestDTO.java
 │   ├── ProfesionalResponseDTO.java
 │   ├── TurnoRequestDTO.java
 │   ├── TurnoResponseDTO.java
-│   └── ErrorDTO.java
-├── mapper/                        # Mapeadores de conversión entre Entidad y DTO (@Component)
+│   └── ErrorDTO.java                   # Formato consistente de respuestas de error
+│
+├── mapper/                             # Conversión Entidad <-> DTO (@Component)
 │   ├── PacienteMapper.java
 │   ├── ProfesionalMapper.java
 │   └── TurnoMapper.java
-└── exception/                     # Excepciones propias y handler global (@RestControllerAdvice)
-    ├── PacienteNotFoundException.java
-    ├── ProfesionalNotFoundException.java
-    ├── TurnoNotFoundException.java
-    ├── ReglaDeNegocioException.java
-    └── GlobalExceptionHandler.java
+│
+└── exception/                          # Manejo Centralizado de Excepciones
+    ├── PacienteNotFoundException.java  # Retorna 404
+    ├── ProfesionalNotFoundException.java # Retorna 404
+    ├── TurnoNotFoundException.java     # Retorna 404
+    ├── ReglaDeNegocioException.java    # Retorna 400
+    └── GlobalExceptionHandler.java     # @RestControllerAdvice
 ```
 
-> **Buenas prácticas aplicadas:**
-> * Inyección de dependencias exclusivamente por **constructor**.
-> * El controlador **nunca** accede a los repositorios; interactúa únicamente con el servicio.
-> * Los clientes envían y reciben únicamente DTOs (records), desacoplando las entidades de base de datos de la interfaz pública.
+> **Pilares de Buenas Prácticas:**
+> 1. **Inyección de dependencias por constructor:** Facilita la inmutabilidad y la testabilidad.
+> 2. **Desacoplamiento total Controller-Repository:** El controlador nunca llama directamente al repositorio.
+> 3. **Uso de Java Records para DTOs:** Inmutabilidad garantizada, código conciso y seguro.
 
 ---
 
 ## 🚦 5. Funcionalidades y Endpoints Disponibles
 
-### Pacientes (`/api/pacientes`)
-| Método | Ruta | Descripción | Código Éxito | Códigos Error |
-|---|---|---|---|---|
+### 👤 Pacientes (`/api/pacientes`)
+| Método | Endpoint | Descripción | Código Éxito | Códigos Error |
+|---|---|---|:---:|:---:|
 | `GET` | `/api/pacientes` | Listar todos los pacientes | `200 OK` | - |
 | `GET` | `/api/pacientes/{id}` | Buscar paciente por ID | `200 OK` | `404 Not Found` |
-| `GET` | `/api/pacientes/dni/{dni}` | Buscar paciente por DNI | `200 OK` | `404 Not Found` |
-| `GET` | `/api/pacientes/buscar?apellido=...` | Filtrar pacientes por apellido | `200 OK` | - |
+| `GET` | `/api/pacientes/dni/{dni}` | Buscar paciente por DNI exacto | `200 OK` | `404 Not Found` |
+| `GET` | `/api/pacientes/buscar?apellido=...` | Buscar por coincidencia de apellido | `200 OK` | - |
 | `POST` | `/api/pacientes` | Registrar un nuevo paciente | `201 Created` | `400 Bad Request` |
-| `PUT` | `/api/pacientes/{id}` | Actualizar datos del paciente | `200 OK` | `400 / 404` |
-| `DELETE` | `/api/pacientes/{id}` | Eliminar paciente | `204 No Content`| `400 (con turnos) / 404` |
+| `PUT` | `/api/pacientes/{id}` | Modificar datos de un paciente | `200 OK` | `400 / 404` |
+| `DELETE` | `/api/pacientes/{id}` | Eliminar paciente | `204 No Content` | `400 (turnos vinculados) / 404` |
 
-### Profesionales (`/api/profesionales`)
-| Método | Ruta | Descripción | Código Éxito | Códigos Error |
-|---|---|---|---|---|
+### 👨‍⚕️ Profesionales (`/api/profesionales`)
+| Método | Endpoint | Descripción | Código Éxito | Códigos Error |
+|---|---|---|:---:|:---:|
 | `GET` | `/api/profesionales` | Listar todos los médicos | `200 OK` | - |
 | `GET` | `/api/profesionales/{id}` | Buscar profesional por ID | `200 OK` | `404 Not Found` |
-| `GET` | `/api/profesionales/buscar?especialidad=...` | Filtrar por especialidad | `200 OK` | - |
+| `GET` | `/api/profesionales/buscar?especialidad=...` | Filtrar profesionales por especialidad | `200 OK` | - |
 | `POST` | `/api/profesionales` | Registrar profesional | `201 Created` | `400 Bad Request` |
-| `PUT` | `/api/profesionales/{id}` | Actualizar profesional | `200 OK` | `400 / 404` |
-| `DELETE` | `/api/profesionales/{id}` | Eliminar profesional | `204 No Content`| `400 (con turnos) / 404` |
+| `PUT` | `/api/profesionales/{id}` | Modificar datos de un profesional | `200 OK` | `400 / 404` |
+| `DELETE` | `/api/profesionales/{id}` | Eliminar profesional | `204 No Content` | `400 (turnos vinculados) / 404` |
 
-### Turnos (`/api/turnos`)
-| Método | Ruta | Descripción | Código Éxito | Códigos Error |
-|---|---|---|---|---|
+### 📅 Turnos (`/api/turnos`)
+| Método | Endpoint | Descripción | Código Éxito | Códigos Error |
+|---|---|---|:---:|:---:|
 | `GET` | `/api/turnos` | Listar todos los turnos | `200 OK` | - |
 | `GET` | `/api/turnos/{id}` | Buscar turno por ID | `200 OK` | `404 Not Found` |
 | `GET` | `/api/turnos/paciente/{idPaciente}` | **Consulta por relación:** Turnos de un paciente | `200 OK` | `404 (paciente no existe)` |
 | `GET` | `/api/turnos/profesional/{idProfesional}` | **Consulta por relación:** Turnos de un médico | `200 OK` | `404 (médico no existe)` |
-| `POST` | `/api/turnos` | Reservar nuevo turno | `201 Created` | `400 / 404` |
-| `PUT` | `/api/turnos/{id}` | Modificar / reprogramar turno | `200 OK` | `400 / 404` |
-| `DELETE` | `/api/turnos/{id}` | Cancelar / eliminar turno | `204 No Content`| `404 Not Found` |
+| `POST` | `/api/turnos` | Reservar nuevo turno médico | `201 Created` | `400 / 404` |
+| `PUT` | `/api/turnos/{id}` | Reprogramar / modificar turno | `200 OK` | `400 / 404` |
+| `DELETE` | `/api/turnos/{id}` | Cancelar / eliminar turno | `204 No Content` | `404 Not Found` |
 
 ---
 
 ## 🛡️ 6. Validaciones y Manejo de Errores
 
-### Validaciones de Entrada (Bean Validation con `@Valid`)
-* `@NotBlank`, `@Size(min = 2, max = 100)`: Nombres, apellidos y especialidad obligatorios.
-* `@Pattern(regexp = "\\d{7,10}")`: El DNI debe ser numérico y con longitud acorde (7 a 10 dígitos).
-* `@Email`: Formato estricto y válido de correo electrónico.
-* `@NotNull`: Identificadores de relaciones (`idPaciente`, `idProfesional`) y fecha del turno.
-* `@Future`: La fecha y hora de la reserva **no pueden ser pasadas**.
+### Control de Datos de Entrada (Bean Validation)
+* **`@NotBlank` y `@Size`:** Exigencia de nombres, apellidos y matrícula válidos.
+* **`@Pattern`:** Formato numérico estricto para DNI (entre 7 y 10 cifras).
+* **`@Email`:** Control de sintaxis de correo electrónico.
+* **`@Future`:** La fecha de reserva de turno **no puede estar en el pasado**.
 
-### Reglas de Negocio e Integridad Referencial
-1. **Verificación de Existencia de Entidades Relacionadas:** Antes de guardar o actualizar un `Turno`, se comprueba explícitamente en base de datos la existencia del `Paciente` y del `Profesional`. Si alguno no existe, se rechaza la petición con código **`404 Not Found`**.
-2. **Disponibilidad Horaria (Sin Superposición):**
-   * Se valida que el profesional no tenga otro turno en el mismo día y horario (`"Ese horario ya está reservado, elegí otro."` -> **`400 Bad Request`**).
-   * Se valida que el paciente no posea otro turno asignado a la misma hora (`"El paciente ya cuenta con un turno registrado en ese mismo horario."` -> **`400 Bad Request`**).
-3. **Unicidad de Datos Clave:** No se permite registrar DNI duplicado para pacientes ni matrícula duplicada para profesionales (**`400 Bad Request`**).
-4. **Protección de Integridad al Eliminar (Sin borrado en cascada descontrolado):** Si se intenta eliminar un paciente o un profesional que posee turnos asociados, el sistema impide el borrado y devuelve **`400 Bad Request`** con el mensaje: `"No se puede eliminar porque tiene turnos asociados."`
+### Reglas de Negocio Protegidas
+1. **Comprobación Previa de Existencia:** No se permite crear ni asociar turnos con un ID de paciente o profesional inexistente en la base de datos (responde **`404 Not Found`**).
+2. **Disponibilidad Horaria sin Solapamiento:**
+   * Si el médico ya tiene un turno reservado en ese mismo día y horario: responde **`400 Bad Request`** con `"Ese horario ya está reservado, elegí otro."`
+   * Si el paciente ya cuenta con otro turno en ese horario: responde **`400 Bad Request`** con `"El paciente ya cuenta con un turno registrado en ese mismo horario."`
+3. **No Duplicidad:** Control de DNI duplicado para pacientes y matrícula duplicada para profesionales (**`400 Bad Request`**).
+4. **Conservación de la Integridad Referencial:** No se aplican cascadas que borren turnos silenciosamente. Al intentar eliminar un paciente o un profesional con turnos registrados, la API lo rechaza con **`400 Bad Request`** informando: `"No se puede eliminar porque tiene turnos asociados."`
 
-### Formato de Error Consistente (`ErrorDTO`)
-Todas las excepciones capturadas por `@RestControllerAdvice` retornan un JSON unificado:
+### Estructura Uniforme de Error (`ErrorDTO`)
 ```json
 {
   "status": 404,
@@ -196,27 +228,34 @@ Todas las excepciones capturadas por `@RestControllerAdvice` retornan un JSON un
 
 ---
 
-## 💻 7. Requisitos e Instrucciones de Ejecución
+## 💻 7. Instrucciones de Instalación y Ejecución
 
-### Requisitos Previos
-* **Java:** JDK 21 instalado (LTS).
-* **Maven:** Se incluye el wrapper oficial (`./mvnw` / `mvnw.cmd`), por lo que no es necesario instalar Maven manualmente.
-* **MySQL:** Servidor MySQL 8.0+ en ejecución (por ejemplo mediante XAMPP, MySQL Server o Docker) en el puerto local por defecto `3306`.
+### Requisitos
+* **Java 21 JDK** o superior instalado.
+* **MySQL 8.0+** corriendo en el puerto `3306` (XAMPP, MySQL Server o Docker).
 
-### Configuración de la Base de Datos MySQL
-1. Iniciar el servicio de MySQL (puerto `3306`).
-2. Abrir MySQL Workbench, phpMyAdmin o terminal y ejecutar el script disponible en:
-   [`database/schema.sql`](file:///C:/Users/furia/.gemini/antigravity/scratch/turno-clinica/database/schema.sql)
-3. (Opcional) Cargar los datos de prueba iniciales ejecutando:
-   [`database/data.sql`](file:///C:/Users/furia/.gemini/antigravity/scratch/turno-clinica/database/data.sql)
+### 1. Preparar la Base de Datos MySQL
+En tu cliente MySQL (Workbench, phpMyAdmin o terminal), ejecuta el script de creación:
+```sql
+-- Ejecutar el contenido del archivo database/schema.sql
+CREATE DATABASE IF NOT EXISTS turnoclinica
+    CHARACTER SET utf8mb4
+    COLLATE utf8mb4_unicode_ci;
+```
+*(Opcional: puedes ejecutar también `database/data.sql` para tener registros precargados de prueba).*
 
-> **Nota:** La configuración en `src/main/resources/application.properties` se conecta a:  
-> `jdbc:mysql://localhost:3306/turnoclinica?createDatabaseIfNotExist=true` con usuario `root` y contraseña vacía. Si su servidor MySQL utiliza otra contraseña, puede ajustarla en dicho archivo.
+### 2. Configurar Credenciales (si fuera necesario)
+El archivo [`src/main/resources/application.properties`](file:///C:/Users/furia/.gemini/antigravity/scratch/turno-clinica/src/main/resources/application.properties) contiene los valores estándar locales:
+```properties
+spring.datasource.url=jdbc:mysql://localhost:3306/turnoclinica?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=America/Argentina/Cordoba
+spring.datasource.username=root
+spring.datasource.password=
+```
 
-### Pasos para Iniciar la Aplicación
+### 3. Ejecutar la Aplicación
+El proyecto incluye el Maven Wrapper oficial, por lo que **no necesitas tener Maven instalado**:
 
-#### Opción A — Ejecución por consola con Maven Wrapper:
-```bash
+```powershell
 # En Windows (PowerShell / CMD)
 .\mvnw.cmd spring-boot:run
 
@@ -224,31 +263,28 @@ Todas las excepciones capturadas por `@RestControllerAdvice` retornan un JSON un
 ./mvnw spring-boot:run
 ```
 
-#### Opción B — Ejecución de Pruebas Automatizadas:
-```bash
-.\mvnw.cmd test
-```
-*(Las pruebas se ejecutan contra base H2 en memoria integrada en `application-test.properties`, garantizando ejecución inmediata e independiente).*
-
-La aplicación se levantará en:  
+La aplicación arrancará y estará disponible en:  
 `http://localhost:8080`
 
----
-
-## 🧪 8. Peticiones Reproducibles y Casos de Prueba (Consigna)
-
-Se incluye la colección lista para importar en Postman:  
-📂 **[`TurnoClinica.postman_collection.json`](file:///C:/Users/furia/.gemini/antigravity/scratch/turno-clinica/TurnoClinica.postman_collection.json)**
-
-A continuación se documentan los 6 casos de prueba mínimos exigidos:
+### 4. Ejecutar la Suite de Pruebas Automatizadas
+Para correr las pruebas unitarias y de integración que verifican los casos de la rúbrica:
+```powershell
+.\mvnw.cmd test
+```
+*(Los tests utilizan una base H2 en memoria aislada, garantizando resultado exitoso inmediato sin alterar tu base MySQL).*
 
 ---
 
-### Caso 1: Crear un registro válido
-* **Método:** `POST`
-* **Ruta:** `http://localhost:8080/api/pacientes`
-* **Headers:** `Content-Type: application/json`
-* **Body:**
+## 🧪 8. Colección de Postman y Pruebas Reproducibles
+
+Se incluye la colección completa en el repositorio:  
+📂 **[`TurnoClinica.postman_collection.json`](./TurnoClinica.postman_collection.json)** (puedes importarla directamente en Postman).
+
+A continuación se resumen los **6 casos de prueba mínimos** requeridos por la cátedra:
+
+### 1️⃣ Caso 1: Crear un registro válido
+* **POST** `http://localhost:8080/api/pacientes`
+* **JSON:**
 ```json
 {
   "nombre": "Ignacio",
@@ -259,173 +295,45 @@ A continuación se documentan los 6 casos de prueba mínimos exigidos:
   "obraSocial": "Medifé"
 }
 ```
-* **Resultado Esperado:** `201 Created` y DTO con ID generado:
-```json
-{
-  "id": 1,
-  "nombre": "Ignacio",
-  "apellido": "Ortiz",
-  "dni": "41234567",
-  "telefono": "+54 351 7778899",
-  "email": "ignacio.ortiz@ucc.edu.ar",
-  "obraSocial": "Medifé"
-}
-```
+* **Resultado:** `201 Created` con DTO que incluye el `id` autogenerado.
+
+### 2️⃣ Caso 2: Listar y buscar un registro existente
+* **GET** `http://localhost:8080/api/pacientes/1`
+* **Resultado:** `200 OK` con los datos persistidos del paciente.
+
+### 3️⃣ Caso 3: Modificar y eliminar un registro
+* **Modificar:** **PUT** `http://localhost:8080/api/pacientes/1` con nuevos datos -> **`200 OK`**.
+* **Eliminar:** **DELETE** `http://localhost:8080/api/turnos/1` -> **`204 No Content`** (sin cuerpo).
+
+### 4️⃣ Caso 4: Enviar datos que incumplan una validación
+* **POST** `http://localhost:8080/api/pacientes` con campos vacíos o email inválido.
+* **Resultado:** `400 Bad Request` y ningún registro inválido guardado.
+* **POST** `http://localhost:8080/api/turnos` con fecha pasada (`"fechaHora": "2020-01-01T10:00:00"`).
+* **Resultado:** `400 Bad Request` (`"La fecha y hora del turno no pueden ser pasadas"`).
+
+### 5️⃣ Caso 5: Buscar un ID inexistente o asociar una entidad inexistente
+* **GET** `http://localhost:8080/api/pacientes/99999` -> **`404 Not Found`**.
+* **POST** `http://localhost:8080/api/turnos` asociando `idPaciente: 99999` -> **`404 Not Found`** (`"No se encontró el paciente con ID: 99999"`).
+
+### 6️⃣ Caso 6: Consultar registros mediante una relación
+* **GET** `http://localhost:8080/api/turnos/paciente/1`
+* **Resultado:** `200 OK` con la lista de turnos asociados al paciente o lista vacía `[]` si no posee turnos aún.
+
+### 7️⃣ Caso Adicional: Impedir eliminación de entidad con turnos vinculados
+* **DELETE** `http://localhost:8080/api/pacientes/1` (con turnos activos).
+* **Resultado:** `400 Bad Request` (`"No se puede eliminar porque tiene turnos asociados."`).
 
 ---
 
-### Caso 2: Listar y buscar un registro existente
-* **Método:** `GET`
-* **Ruta:** `http://localhost:8080/api/pacientes/1`
-* **Resultado Esperado:** `200 OK` con los datos persistidos del paciente ID 1.
+## 🚀 9. Próximos Pasos (Segundo Entregable)
+En la próxima entrega se integrará:
+1. **Seguridad con Spring Security:** Autenticación basada en JSON Web Tokens (JWT).
+2. **Autorización y Roles:** Perfiles diferenciados (`ROLE_PACIENTE`, `ROLE_PROFESIONAL`, `ROLE_ADMIN`).
+3. **Módulo de Sedes / Consultorios:** Gestión de consultorios físicos y asignación de salas.
+4. **Notificaciones:** Integración de alertas automáticas para recordatorio de turnos.
 
 ---
 
-### Caso 3: Modificar y eliminar un registro
-* **Modificación (PUT):**
-  * **Ruta:** `http://localhost:8080/api/pacientes/1`
-  * **Body:**
-  ```json
-  {
-    "nombre": "Ignacio Gabriel",
-    "apellido": "Ortiz",
-    "dni": "41234567",
-    "telefono": "+54 351 7778899",
-    "email": "ignacio.gabriel@ucc.edu.ar",
-    "obraSocial": "OSDE 310"
-  }
-  ```
-  * **Resultado Esperado:** `200 OK` con los datos actualizados.
-* **Eliminación (DELETE):**
-  * **Ruta:** `http://localhost:8080/api/turnos/1`
-  * **Resultado Esperado:** `204 No Content` (sin cuerpo).
-
----
-
-### Caso 4: Enviar datos que incumplan una validación
-* **Ejemplo 4A (DNI no numérico y email inválido):**
-  * **Método:** `POST`
-  * **Ruta:** `http://localhost:8080/api/pacientes`
-  * **Body:**
-  ```json
-  {
-    "nombre": "",
-    "apellido": "",
-    "dni": "no-es-numero",
-    "email": "invalido-sin-arroba"
-  }
-  ```
-  * **Resultado Esperado:** `400 Bad Request` y ningún registro guardado.
-  ```json
-  {
-    "status": 400,
-    "mensaje": "Datos inválidos: nombre: El nombre es obligatorio; dni: El DNI debe ser numérico y contener entre 7 y 10 dígitos; email: El formato de email no es válido",
-    "timestamp": "2026-10-19T14:35:10"
-  }
-  ```
-
-* **Ejemplo 4B (Fecha del turno en el pasado):**
-  * **Método:** `POST`
-  * **Ruta:** `http://localhost:8080/api/turnos`
-  * **Body:**
-  ```json
-  {
-    "fechaHora": "2020-01-01T10:00:00",
-    "motivo": "Turno en fecha pasada",
-    "idPaciente": 1,
-    "idProfesional": 1
-  }
-  ```
-  * **Resultado Esperado:** `400 Bad Request` (`"La fecha y hora del turno no pueden ser pasadas"`).
-
----
-
-### Caso 5: Buscar un ID inexistente o asociar una entidad inexistente
-* **Ejemplo 5A (Buscar paciente inexistente):**
-  * **Método:** `GET`
-  * **Ruta:** `http://localhost:8080/api/pacientes/99999`
-  * **Resultado Esperado:** `404 Not Found`
-  ```json
-  {
-    "status": 404,
-    "mensaje": "No se encontró el paciente con ID: 99999",
-    "timestamp": "2026-10-19T14:35:12"
-  }
-  ```
-
-* **Ejemplo 5B (Asociar paciente inexistente a un nuevo turno):**
-  * **Método:** `POST`
-  * **Ruta:** `http://localhost:8080/api/turnos`
-  * **Body:**
-  ```json
-  {
-    "fechaHora": "2026-12-15T10:00:00",
-    "motivo": "Consulta cardiológica",
-    "idPaciente": 99999,
-    "idProfesional": 1
-  }
-  ```
-  * **Resultado Esperado:** `404 Not Found`
-  ```json
-  {
-    "status": 404,
-    "mensaje": "No se encontró el paciente con ID: 99999",
-    "timestamp": "2026-10-19T14:35:15"
-  }
-  ```
-
----
-
-### Caso 6: Consultar registros mediante una relación
-* **Método:** `GET`
-* **Ruta:** `http://localhost:8080/api/turnos/paciente/1`
-* **Resultado Esperado:** `200 OK` con lista de turnos asignados al paciente o lista vacía `[]` si no tiene turnos:
-```json
-[
-  {
-    "id": 1,
-    "fechaHora": "2026-11-25T14:30:00",
-    "motivo": "Consulta de rutina y control general",
-    "estado": "PENDIENTE",
-    "paciente": {
-      "id": 1,
-      "nombre": "Ignacio",
-      "apellido": "Ortiz",
-      "dni": "41234567",
-      "telefono": "+54 351 7778899",
-      "email": "ignacio.ortiz@ucc.edu.ar",
-      "obraSocial": "Medifé"
-    },
-    "profesional": {
-      "id": 1,
-      "nombre": "Ana",
-      "apellido": "Martinez",
-      "matricula": "MP-10452",
-      "especialidad": "Cardiología"
-    }
-  }
-]
-```
-
----
-
-### Caso 7 (Adicional): Intento de eliminar registro con turnos asociados
-* **Método:** `DELETE`
-* **Ruta:** `http://localhost:8080/api/pacientes/1` (teniendo turnos vinculados)
-* **Resultado Esperado:** `400 Bad Request`
-```json
-{
-  "status": 400,
-  "mensaje": "No se puede eliminar porque tiene turnos asociados.",
-  "timestamp": "2026-10-19T14:36:00"
-}
-```
-
----
-
-## 🚀 9. Funcionalidades para el Segundo Entregable
-Para la segunda etapa del proyecto se planifica incorporar:
-1. **Seguridad y Control de Acceso:** Integración de Spring Security y autenticación stateless con tokens JWT.
-2. **Roles y Autorización:** Perfiles diferenciados (`PACIENTE`, `PROFESIONAL`, `ADMINISTRATIVO`) para restringir el acceso a los endpoints.
-3. **Entidad Sede / Consultorio:** Soporte para clínicas con múltiples consultorios y ubicaciones físicas.
-4. **Notificaciones y Recordatorios:** Generación de avisos automáticos ante confirmación o reprogramación de turnos.
+<div align="center">
+Desarrollado para la cátedra <b>Lenguajes de Programación II</b> — UCC 2026.
+</div>
