@@ -1,0 +1,508 @@
+{
+	"info": {
+		"_postman_id": "8a72b036-7c91-4e89-b825-9a84d412e11a",
+		"name": "Turno Clínica API - Lenguajes de Programación II UCC",
+		"description": "Colección completa de pruebas para el primer entregable del trabajo final 'Turno Clínica' (UCC). Incluye CRUDs, relaciones, validaciones y manejo de errores.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "1. Pacientes",
+			"item": [
+				{
+					"name": "Listar todos los pacientes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/pacientes",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "pacientes"]
+						}
+					}
+				},
+				{
+					"name": "Buscar paciente por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/pacientes/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "pacientes", "1"]
+						}
+					}
+				},
+				{
+					"name": "Buscar paciente por DNI",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/pacientes/dni/35123456",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "pacientes", "dni", "35123456"]
+						}
+					}
+				},
+				{
+					"name": "Buscar paciente por Apellido",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/pacientes/buscar?apellido=Perez",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "pacientes", "buscar"],
+							"query": [
+								{
+									"key": "apellido",
+									"value": "Perez"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Crear paciente (POST)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre\": \"Juan\",\n    \"apellido\": \"Perez\",\n    \"dni\": \"35123456\",\n    \"telefono\": \"+54 351 4567890\",\n    \"email\": \"juan.perez@example.com\",\n    \"obraSocial\": \"OSDE\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/pacientes",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "pacientes"]
+						}
+					}
+				},
+				{
+					"name": "Modificar paciente (PUT)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre\": \"Juan Carlos\",\n    \"apellido\": \"Perez\",\n    \"dni\": \"35123456\",\n    \"telefono\": \"+54 351 4567899\",\n    \"email\": \"juancarlos.perez@example.com\",\n    \"obraSocial\": \"OSDE 310\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/pacientes/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "pacientes", "1"]
+						}
+					}
+				},
+				{
+					"name": "Eliminar paciente (DELETE)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/pacientes/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "pacientes", "1"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "2. Profesionales",
+			"item": [
+				{
+					"name": "Listar todos los profesionales",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/profesionales",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "profesionales"]
+						}
+					}
+				},
+				{
+					"name": "Buscar profesional por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/profesionales/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "profesionales", "1"]
+						}
+					}
+				},
+				{
+					"name": "Buscar profesionales por especialidad",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/profesionales/buscar?especialidad=Cardiología",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "profesionales", "buscar"],
+							"query": [
+								{
+									"key": "especialidad",
+									"value": "Cardiología"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Crear profesional (POST)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre\": \"Ana\",\n    \"apellido\": \"Martinez\",\n    \"matricula\": \"MP-10452\",\n    \"especialidad\": \"Cardiología\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/profesionales",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "profesionales"]
+						}
+					}
+				},
+				{
+					"name": "Modificar profesional (PUT)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre\": \"Ana Maria\",\n    \"apellido\": \"Martinez\",\n    \"matricula\": \"MP-10452\",\n    \"especialidad\": \"Cardiología Intervencionista\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/profesionales/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "profesionales", "1"]
+						}
+					}
+				},
+				{
+					"name": "Eliminar profesional (DELETE)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/profesionales/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "profesionales", "1"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "3. Turnos",
+			"item": [
+				{
+					"name": "Listar todos los turnos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/turnos",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "turnos"]
+						}
+					}
+				},
+				{
+					"name": "Buscar turno por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/turnos/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "turnos", "1"]
+						}
+					}
+				},
+				{
+					"name": "Consultar turnos por Paciente (Relación)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/turnos/paciente/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "turnos", "paciente", "1"]
+						}
+					}
+				},
+				{
+					"name": "Consultar turnos por Profesional (Relación)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/turnos/profesional/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "turnos", "profesional", "1"]
+						}
+					}
+				},
+				{
+					"name": "Crear turno (POST)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fechaHora\": \"2026-11-25T14:30:00\",\n    \"motivo\": \"Consulta de rutina y control general\",\n    \"estado\": \"PENDIENTE\",\n    \"idPaciente\": 1,\n    \"idProfesional\": 1\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/turnos",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "turnos"]
+						}
+					}
+				},
+				{
+					"name": "Modificar turno (PUT)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fechaHora\": \"2026-11-25T16:00:00\",\n    \"motivo\": \"Reprogramación por estudio previo\",\n    \"estado\": \"CONFIRMADO\",\n    \"idPaciente\": 1,\n    \"idProfesional\": 1\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/turnos/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "turnos", "1"]
+						}
+					}
+				},
+				{
+					"name": "Eliminar turno (DELETE)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/turnos/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "turnos", "1"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "4. Casos de Prueba de la Consigna",
+			"item": [
+				{
+					"name": "Caso 1 - Crear registro válido (201 Created)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre\": \"Ignacio\",\n    \"apellido\": \"Ortiz\",\n    \"dni\": \"41234567\",\n    \"telefono\": \"+54 351 7778899\",\n    \"email\": \"ignacio.ortiz@ucc.edu.ar\",\n    \"obraSocial\": \"Medifé\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/pacientes",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "pacientes"]
+						}
+					}
+				},
+				{
+					"name": "Caso 2 - Listar y buscar registro existente (200 OK)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/pacientes/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "pacientes", "1"]
+						}
+					}
+				},
+				{
+					"name": "Caso 3A - Modificar registro (200 OK)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre\": \"Juan Modificado\",\n    \"apellido\": \"Perez\",\n    \"dni\": \"35123456\",\n    \"telefono\": \"+54 351 1231234\",\n    \"email\": \"juan.modificado@example.com\",\n    \"obraSocial\": \"OSDE\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/pacientes/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "pacientes", "1"]
+						}
+					}
+				},
+				{
+					"name": "Caso 3B - Eliminar registro (204 No Content)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/turnos/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "turnos", "1"]
+						}
+					}
+				},
+				{
+					"name": "Caso 4A - Error de Validación @Valid (400 Bad Request)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre\": \"\",\n    \"apellido\": \"\",\n    \"dni\": \"no-numerico\",\n    \"email\": \"email-sin-arroba\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/pacientes",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "pacientes"]
+						}
+					}
+				},
+				{
+					"name": "Caso 4B - Error Fecha Pasada en Turno (400 Bad Request)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fechaHora\": \"2020-01-01T10:00:00\",\n    \"motivo\": \"Turno con fecha en el pasado\",\n    \"idPaciente\": 1,\n    \"idProfesional\": 1\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/turnos",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "turnos"]
+						}
+					}
+				},
+				{
+					"name": "Caso 5A - Buscar ID inexistente (404 Not Found)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/pacientes/99999",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "pacientes", "99999"]
+						}
+					}
+				},
+				{
+					"name": "Caso 5B - Asociar entidad inexistente (404 Not Found)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fechaHora\": \"2026-12-10T11:00:00\",\n    \"motivo\": \"Consulta\",\n    \"idPaciente\": 99999,\n    \"idProfesional\": 1\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/turnos",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "turnos"]
+						}
+					}
+				},
+				{
+					"name": "Caso 6 - Consultar registros mediante relación (200 OK)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/turnos/paciente/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "turnos", "paciente", "1"]
+						}
+					}
+				},
+				{
+					"name": "Caso 7 - Impedir eliminar registro con turnos vinculados (400 Bad Request)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/pacientes/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "pacientes", "1"]
+						}
+					}
+				}
+			]
+		}
+	]
+}
